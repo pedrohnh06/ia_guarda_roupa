@@ -1,0 +1,11 @@
+ID_PECA,TIPO,COR,ESTILO,STATUS_USO,IMAGEM_LINK,TEMPERATURA_IDEAL
+P01,Calça,Neutro,Jeans,2,https://via.placeholder.com/100?text=Calca,Neutro
+P02,Camiseta,Neutro,Básica,5,https://via.placeholder.com/100?text=Camiseta,Neutro
+P03,Camiseta,Primária,Básica,1,https://via.placeholder.com/100?text=Camiseta2,Neutro
+P04,Blazer,Neutro,Formal,0,https://via.placeholder.com/100?text=Blazer,Frio
+P05,Saia,Estampada,Casual,1,https://via.placeholder.com/100?text=Saia,Calor
+P06,Calça,Neutro,Formal,0,https://via.placeholder.com/100?text=Calca2,Neutro
+P07,Camiseta,Neutro,Básica,3,https://via.placeholder.com/100?text=Camiseta3,Neutro
+P08,Casaco,Neutro,Casual,0,https://via.placeholder.com/100?text=Casaco,Frio
+P09,Vestido,Primária,Formal,0,https://via.placeholder.com/100?text=Vestido,Calor
+P10,Tênis,Neutro,Casual,1,https://via.placeholder.com/100?text=Tenis,Neutro
