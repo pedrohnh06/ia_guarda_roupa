@@ -14,7 +14,6 @@ class User(Base):
 
 class ClothingItem(Base):
     __tablename__ = "clothes"
-
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     category = Column(String)
