@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from . import schemas, models, database, security
+from . import schemas, models, database, security, services
 # pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session 
+
 
 router = APIRouter(prefix="/clothes", tags=["Roupas"])
 
@@ -36,3 +37,14 @@ def get_clothings(
         ).filter(
             models.ClothingItem.owner_id == current_user.id
             ).all()
+
+@router.get("/recommend", response_model=list[schemas.ClothingResponse])
+def recommend_outfit(
+    city: str,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+
+    generated_look = services.generate_outfit(current_user.id, city=city, db=db)
+
+    return generated_look
