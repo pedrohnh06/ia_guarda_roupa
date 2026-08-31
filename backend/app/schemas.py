@@ -10,10 +10,15 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class UserSettings(BaseModel):
+    temp_threshold: int
+
 class ClothingCreate(BaseModel):
     name: str
     category: str
     weather: str
+    color: str
+    style: str
 
 class ClothingResponse(ClothingCreate):
     id: int

@@ -1,5 +1,5 @@
 # pyrefly: ignore [missing-import]
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
 # pyrefly: ignore [missing-import]
 from sqlalchemy.orm import relationship
 from .database import Base
@@ -11,6 +11,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     clothes = relationship("ClothingItem", back_populates="owner")
+    temp_threshold = Column(Integer, default=22)
 
 class ClothingItem(Base):
     __tablename__ = "clothes"
@@ -21,3 +22,5 @@ class ClothingItem(Base):
     usage_penalty = Column(Float, default=0.0)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="clothes")
+    color = Column(String)
+    style = Column(String)

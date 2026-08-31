@@ -2,15 +2,18 @@ from app import models
 import requests
 # pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session
-import random
+from itertools import product, combinations
 
-def get_weather(city: str):
+def get_weather(
+    city: str,
+    threshold: int
+):
 
     try:    
         response = requests.get(f"https://wttr.in/{city}?format=j1")
         data = response.json()
         temp_c = int(data["current_condition"][0]["temp_C"])
-        if temp_c < 22:
+        if temp_c < threshold:
             return "Frio"
         else: 
             return "Calor"
@@ -22,6 +25,7 @@ def get_weather(city: str):
 def generate_outfit(
     user_id: int,
     city: str,
+    threshold: int,
     db: Session
 ):
     categories = {
@@ -32,7 +36,7 @@ def generate_outfit(
     }
 
 
-    climate = get_weather(city)
+    climate = get_weather(city, threshold)
     search_outfit = db.query(
         models.ClothingItem
         ).filter(
@@ -44,22 +48,43 @@ def generate_outfit(
             categories["upper_list"].append(part)
         elif part.category == "Inferior":
             categories["lowwer_list"].append(part)
-        elif part.category == "Calçado":
+        elif part.category == "Calcado":
             categories["footwar_list"].append(part)
         elif part.category == "Cobertura":
             categories["coverage_list"].append(part)
 
-    outfit_finaly = []
-    for category_name, list_of_items in categories.items():
-        if list_of_items:
-            chosen_items = random.choice(list_of_items)
-            outfit_finaly.append(chosen_items)
+    all_outfits = list(product(
+        categories["upper_list"],
+        categories["lowwer_list"],
+        categories["footwar_list"],
+        categories["coverage_list"]
+        ))
     
-    return outfit_finaly
+    outfit_and_score = []
+    for look in all_outfits:
+        score = rate_the_look(look)
+        outfit_and_score.append({"look": look, "score": score})
     
+    outfit_and_score.sort(key=lambda x: x["score"], reverse=True)
+    if not outfit_and_score:
+        return[]
 
-        
-
+    return list(outfit_and_score[0]["look"])
     
+def rate_the_look(
+    outfit: tuple
+):
 
+    score = 0
+    for part1, part2 in combinations(outfit, 2):
+        if part1.style == part2.style:
+            score += 3
+        if part1.color == "Estampada" and part2.color == "Estampada":
+            score -= 10
+        if part1.usage_penalty >= 3 and part2.usage_penalty >= 3:
+            score -= 5
+        if part1.color == "Neutro" and part2.color == "Neutro":
+            score += 5
     
+    return score
+
