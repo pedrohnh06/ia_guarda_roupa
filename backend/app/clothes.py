@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from . import schemas, models, database, security, services
 # pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session 
@@ -54,3 +54,25 @@ def recommend_outfit(
         db=db)
 
     return generated_look
+
+@router.delete("/{item_id}")
+def delete_clothing(
+    item_id: int,
+    db: Session = Depends(database.get_db),
+    current_user = Depends(security.get_current_user)
+):
+
+    search = db.query(
+        models.ClothingItem
+        ).filter(
+            models.ClothingItem.id == item_id,
+            models.ClothingItem.owner_id == current_user.id
+            ).first()
+    if search is None: 
+        raise HTTPException(status_code=404, detail="Roupa não encontrada")
+    
+    db.delete(search)
+    db.commit()
+    return {"mensagem": "Roupa deletada com sucesso"}
+
+#@router.patch
