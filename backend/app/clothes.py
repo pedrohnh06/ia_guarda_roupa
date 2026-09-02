@@ -75,4 +75,26 @@ def delete_clothing(
     db.commit()
     return {"mensagem": "Roupa deletada com sucesso"}
 
-#@router.patch
+@router.patch("/{item_id}", response_model = schemas.ClothingResponse)
+def update_clothing(
+    item_id: int,
+    body: schemas.ClothingUpdate,
+    db: Session = Depends(database.get_db),
+    current_user = Depends(security.get_current_user)
+):
+    search = db.query(
+        models.ClothingItem
+        ).filter(
+            models.ClothingItem.id == item_id,
+            models.ClothingItem.owner_id == current_user.id
+        ).first()
+    if search is None:
+        raise HTTPException(status_code=404, detail="Roupa não encontrada")
+    
+    new_data = body.model_dump(exclude_unset=True)
+    for key, value in new_data.items():
+        setattr(search, key, value)
+    db.commit()
+    db.refresh(search)
+
+    return search
