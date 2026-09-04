@@ -24,3 +24,4 @@ class ClothingItem(Base):
     owner = relationship("User", back_populates="clothes")
     color = Column(String)
     style = Column(String)
+    image_url = Column(String, nullable=True)

@@ -1,69 +1,62 @@
-🧠 IA Guarda-Roupa: Seu Estilista Pessoal
+﻿# 👔 SmartWardrobe: Seu Estilista Pessoal com IA
 
-Este projeto foi desenvolvido como parte do componente curricular UC HUB e visa utilizar inteligência artificial (IA) baseada em regras de negócio para auxiliar o usuário na escolha de looks, otimizando o uso do guarda-roupa e incorporando o contexto de temperatura e histórico de uso.
+O **SmartWardrobe** é uma aplicação completa (Frontend + Backend) que utiliza Inteligência Artificial baseada em regras de negócio para gerar recomendações inteligentes de looks. Ele considera o clima atual da sua cidade, o seu limiar de temperatura pessoal (sensação térmica) e regras avançadas de estilo e combinação de cores.
 
-O aplicativo é construído em Python, utilizando a biblioteca Streamlit para a interface web e Pandas para o motor de dados (simulando um banco de dados via CSV).
+## 🚀 Tecnologias Utilizadas
 
-🔗 Acesse a Aplicação Online (Streamlit Cloud)
+**Frontend:**
+- **[Streamlit](https://streamlit.io/)**: Interface premium e reativa, com injeção de CSS personalizado para uma experiência de luxo inspirada em grandes sites de moda.
+- Arquitetura baseada em Sessão (Stateless API Client) com suporte a Token JWT.
 
-Você pode acessar a versão mais recente do aplicativo diretamente, sem precisar instalar nada, através do link de deploy:
+**Backend:**
+- **[FastAPI](https://fastapi.tiangolo.com/)**: Motor de alta performance para a API.
+- **SQLAlchemy (SQLite)**: ORM robusto para o banco de dados (estruturado para facilitar futura migração para PostgreSQL).
+- **JWT (JSON Web Tokens)**: Autenticação segura de usuários.
+- Integração com a API de clima **wttr.in** em tempo real.
 
-https://iaguardaroupa-ko9lyvj2fmhfhuxvljddbf.streamlit.app/
+## ✨ Principais Funcionalidades
 
-Para usar:
+- **Autenticação e Sessão**: Criação de conta e login seguro. Cada usuário tem seu próprio guarda-roupa isolado no banco de dados.
+- **Gerenciamento de Inventário (CRUD)**: Adicione, edite e exclua roupas informando Categoria, Cor, Estilo, Clima e anexando uma Foto (Upload local).
+- **Motor de Recomendação Inteligente (IA)**: 
+  - Gera um look completo cruzando **Superior + Inferior + Calçado + Cobertura**.
+  - **Filtro de Temperatura Dinâmico**: Lê o clima atual da cidade do usuário e compara com o limiar configurado (ex: abaixo de 22ºC = Frio).
+  - **Pontuação de Look**: Penaliza misturas de estampas, bonifica combinações de peças neutras e prioriza coerência de estilo.
+- **Configurações Pessoais**: Ajuste dinâmico de limiar de temperatura.
 
-Baixe o arquivo roupas.csv de exemplo deste repositório.
+## ⚙️ Estrutura do Projeto
 
-Acesse o link acima.
+O repositório foi modularizado nas seguintes pastas:
 
-Carregue o roupas.csv na barra lateral para iniciar o inventário e a IA.
+- \/frontend/\: Contém o \pp.py\ (Interface Streamlit) e o \pi_client.py\ (Responsável pelas chamadas HTTP para o backend).
+- \/backend/\: Contém toda a infraestrutura FastAPI.
+  - \/app/main.py\: Ponto de entrada da API.
+  - \/app/clothes.py\ & \/app/auth.py\: Rotas (Endpoints).
+  - \/app/services.py\: Cérebro da Inteligência Artificial de Combinação e consumo de API de tempo.
+  - \/app/models.py\ & \/app/schemas.py\: Estrutura do Banco de Dados.
 
-✨ Funcionalidades Principais
+## 💻 Como Executar o Projeto Localmente
 
-Motor de Recomendação Inteligente (4 Peças): Gera looks completos (Superior, Inferior, Calçado e Cobertura) baseado em regras de estilo, cor e compatibilidade de peças.
+Você precisará iniciar o Backend e o Frontend separadamente.
 
-Filtro de Temperatura Dinâmico (NOVO): Permite ao usuário selecionar "Frio" ou "Calor", ativando um filtro que garante que apenas peças adequadas e neutras sejam consideradas. Inclui automaticamente peças de Cobertura (Casacos/Blazers) no filtro "Frio".
+### 1. Backend (FastAPI)
+Abra um terminal, navegue até a pasta raiz do projeto e execute:
+\\\ash
+cd backend
+uvicorn app.main:app --reload
+\\\
+A API estará rodando em \http://localhost:8000\. Você pode ver a documentação do Swagger acessando \http://localhost:8000/docs\.
 
-Aprendizado Contínuo (Feedback Loop): O usuário pode Aprovar ou Rejeitar os looks sugeridos.
-
-Aprovação: Diminui a penalidade de uso das peças.
-
-Rejeição: Aumenta a penalidade de uso das peças e remove o look do histórico de sugestões da sessão.
-
-Gerenciamento de Inventário: Permite carregar um arquivo CSV como base de dados e cadastrar novas peças dinamicamente.
-
-🚀 Como Executar o Projeto Localmente
-
-Siga os passos abaixo para rodar a aplicação em seu ambiente local.
-
-Pré-requisitos
-
-Você precisa ter o Python (versão 3.8+) instalado em seu sistema.
-
-Instale as bibliotecas necessárias:
-
-pip install -r requirements.txt
-
-
-Estrutura de Arquivos
-
-Certifique-se de ter os seguintes arquivos no mesmo diretório:
-
-app.py (Interface do Streamlit)
-
-motor_recomendacao.py (Lógica da IA)
-
-roupas.csv (Base de Dados Inicial)
-
-requirements.txt (Lista de dependências)
-
-Inicialização
-
-Abra o terminal ou prompt de comando no diretório do projeto.
-
-Execute o comando:
-
+### 2. Frontend (Streamlit)
+Abra um segundo terminal, navegue até a pasta do projeto e execute:
+\\\ash
+cd frontend
 streamlit run app.py
+\\\
+O aplicativo será aberto automaticamente no seu navegador (geralmente em \http://localhost:8501\).
 
-
-O aplicativo será aberto automaticamente no seu navegador (geralmente em http://localhost:8501).
+## 🛡️ Git e Versionamento
+O projeto conta com um \.gitignore\ configurado para evitar envios acidentais de arquivos sensíveis como:
+- O banco de dados SQLite local (\*.db\)
+- A pasta de uploads de imagens dos usuários
+- O ambiente virtual Python (\.venv\) e arquivos de cache.

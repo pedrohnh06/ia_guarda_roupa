@@ -1,0 +1,37 @@
+﻿# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Uploads / Imagens e mídias do usuário
+backend/images/
+backend/uploads/
+*.img
+*.png
+*.jpg
+*.jpeg
+
+# IDEs e OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# Logs e testes
+*.log
+.pytest_cache/
+.coverage
+
+# Streamlit
+.streamlit/secrets.toml

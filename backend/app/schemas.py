@@ -20,6 +20,7 @@ class ClothingCreate(BaseModel):
     weather: str
     color: str
     style: str
+    image_url: Optional[str] = None
 
 class ClothingResponse(ClothingCreate):
     id: int
@@ -33,3 +34,4 @@ class ClothingUpdate(BaseModel):
     weather: Optional[str] = None
     color: Optional[str] = None
     style: Optional[str] = None
+    image_url: Optional[str] = None

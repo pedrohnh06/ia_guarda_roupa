@@ -28,6 +28,12 @@ def generate_outfit(
     threshold: int,
     db: Session
 ):
+    """
+    Gera a melhor combinação de roupas (look) baseada na temperatura da cidade.
+    Filtra as peças do usuário pelo clima (Frio/Calor) e gera todas as combinações
+    possíveis (Superior, Inferior, Calçado e Cobertura).
+    Retorna a combinação com a maior pontuação (score) baseada em estilo e cor.
+    """
     categories = {
     "upper_list" : [],
     "lowwer_list": [],
@@ -74,6 +80,14 @@ def generate_outfit(
 def rate_the_look(
     outfit: tuple
 ):
+    """
+    Avalia uma combinação de roupas e retorna uma pontuação (score) de compatibilidade.
+    Critérios da IA:
+    - Mesma categoria de estilo (ex: Casual + Casual): +3 pontos
+    - Duas peças estampadas: -10 pontos (evita excesso visual)
+    - Alta penalidade de uso (roupas gastas): -5 pontos
+    - Combinação de duas peças de cor neutra: +5 pontos (aposta segura)
+    """
 
     score = 0
     for part1, part2 in combinations(outfit, 2):

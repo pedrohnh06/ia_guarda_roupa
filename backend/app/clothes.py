@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from . import schemas, models, database, security, services
 # pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session 
-
+import os
+import shutil
 
 router = APIRouter(prefix="/clothes", tags=["Roupas"])
+
+os.makedirs("uploads", exist_ok=True)
 
 @router.post("/", response_model=schemas.ClothingResponse)
 def create_clothings(
@@ -19,7 +22,8 @@ def create_clothings(
         weather = clothing.weather,
         owner_id = current_user.id,
         color = clothing.color,
-        style = clothing.style
+        style = clothing.style,
+        image_url = clothing.image_url
     )
 
     db.add(create_clothing)
@@ -46,6 +50,11 @@ def recommend_outfit(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
+    """
+    Endpoint inteligente de recomendação de look.
+    Recebe a cidade, verifica a previsão do tempo (wttr.in) usando o limiar térmico
+    do usuário e invoca o algoritmo de pontuação para retornar o look do dia perfeito.
+    """
 
     generated_look = services.generate_outfit(
         current_user.id,
@@ -98,3 +107,15 @@ def update_clothing(
     db.refresh(search)
 
     return search
+
+@router.post("/upload")
+def upload_image(
+    file: UploadFile = File(...),
+    current_user = Depends(security.get_current_user)
+):
+
+    file_path = f"uploads/{file.filename}"
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+ 
+    return {"image_url": file_path}
